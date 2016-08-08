@@ -1,0 +1,69 @@
+/ Navigation
+%nav.navbar.navbar-inverse.navbar-fixed-top{:role => "navigation"}
+  .container
+    / Brand and toggle get grouped for better mobile display
+    .navbar-header
+      %button.navbar-toggle{"data-target" => "#bs-example-navbar-collapse-1", "data-toggle" => "collapse", :type => "button"}
+        %span.sr-only Toggle navigation
+        %span.icon-bar
+        %span.icon-bar
+        %span.icon-bar
+      %a.navbar-brand{:href => "#"} Skello_test
+
+
+
+.container
+  .row.posts
+    .new_post
+      %a.accordion.glyphicon.glyphicon-plus{:href => "#"} Nouveau post
+      .panel
+        %form.new{:action => "/new/post", :method => "POST"}
+          %label Titre :
+          %input{:name => "post[title]", :type => "text"}/
+          %label Description :
+          %input{:name => "post[content]",:type => "text"}/
+          %label Photo :
+          %input{:name => "post[photo]",:type => "text"}/
+          %input{:type => "submit", :value => "Publier"}/
+    .col-md-8
+      - @posts.each do |post|
+        %h2= post.title
+        - if post.photo.nil?
+          %img.img-responsiv{:src =>  "http://kickpoint.ca/wp-content/themes/kickpoint/img/kick_point_blog_icon.svg", :width => "150"}/
+        - else
+          %img.img-responsiv{:src =>  "#{post.photo}", :width => "150"}/
+
+        %hr/
+        %p= post.content
+        - if !Comment.get(post.id).nil?
+          %button.accordion Voir commentaires
+          .panel
+            %ul
+
+            -  json_format(Comment.get(post.id).content).each do |com|
+              %li
+                .glyphicon.glyphicon-user.comments
+                  = com
+          %button.accordion Commenter
+          .panel
+            %form.new{:action => "/#{post.id}", :method => "GET"}
+              %input{:name => "_method", :type => "hidden", :method => "POST"}
+              %input{:content => "comment[content]", :type => "text"}/
+              %input.button{:type => "submit", :value => "Commenter !"}
+
+/ jQuery
+%script{:src => "js/jquery.js"}
+/ Bootstrap Core JavaScript
+%script{:src => "js/bootstrap.min.js"}
+
+:javascript
+  var acc = document.getElementsByClassName("accordion");
+  var i;
+
+  for (i = 0; i < acc.length; i++) {
+      acc[i].onclick = function(){
+          this.classList.toggle("active");
+          this.nextElementSibling.classList.toggle("show");
+      }
+  }
+
