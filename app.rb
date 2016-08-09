@@ -25,13 +25,20 @@ end
 DataMapper.setup(:default, ENV['DATABASE_URL'] || "sqlite3://#{Dir.pwd}/development.db")
 
 class Post
+
   include DataMapper::Resource
+
+  before :save, :delete_space
+
   property :id,              Serial
   property :title,           String
   property :content,         String
   property :photo,           String
   property :rating,          Integer
 
+  def delete_space
+    self.photo = self.photo.strip!
+  end
 end
 
 class Comment

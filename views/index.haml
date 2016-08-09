@@ -28,10 +28,10 @@
     .col-md-8
       - @posts.each do |post|
         %h2= post.title
-        - if post.photo.nil?
-          %img.img-responsiv{:src =>  "http://kickpoint.ca/wp-content/themes/kickpoint/img/kick_point_blog_icon.svg", :width => "150"}/
-        - else
+        - if post.photo
           %img.img-responsiv{:src =>  "#{post.photo}", :width => "150"}/
+        - else
+          %img.img-responsiv{:src =>  "http://kickpoint.ca/wp-content/themes/kickpoint/img/kick_point_blog_icon.svg", :width => "150"}/
 
         %hr/
         %p= post.content
